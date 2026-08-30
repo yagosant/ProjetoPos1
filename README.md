@@ -66,15 +66,72 @@ ProjetoPos1/
 
 | Método | Rota | Descrição |
 |---|---|---|
-| `GET` | `/api/pedido` | Lista todos os pedidos |
-| `GET` | `/api/pedido/{id}` | Busca um pedido pelo ID |
-| `GET` | `/api/pedido/nome/{nome}` | Busca pedidos pelo nome do cliente |
-| `GET` | `/api/pedido/contar` | Retorna o total de pedidos cadastrados |
-| `POST` | `/api/pedido` | Cria um novo pedido |
-| `PUT` | `/api/pedido/{id}` | Atualiza um pedido existente |
-| `DELETE` | `/api/pedido/{id}` | Remove um pedido |
+| `GET` | `/api/Pedido/ListarTodosPedidos` | Lista todos os pedidos |
+| `GET` | `/api/Pedido/BuscarPedido/{id}` | Busca um pedido pelo ID |
+| `GET` | `/api/Pedido/BuscaPedidoParcial/{nome}` | Busca pedidos pelo nome do cliente (busca parcial) |
+| `GET` | `/api/Pedido/ContarPedidos` | Retorna o total de pedidos cadastrados |
+| `POST` | `/api/Pedido/CriarPedido` | Cria um novo pedido |
+| `PUT` | `/api/Pedido/AtualizarPedido/{id}` | Atualiza um pedido existente |
+| `DELETE` | `/api/Pedido/RemoverPedido/{id}` | Remove um pedido |
 
 > A documentação interativa completa (com exemplos de requisição/resposta) fica disponível via Swagger, conforme instruções abaixo.
+
+### 📄 Exemplos de requisição/resposta
+
+**Criar pedido — `POST /api/Pedido/CriarPedido`**
+
+Requisição:
+```json
+{
+  "clienteNome": "Maria Silva",
+  "produtos": ["Notebook", "Mouse sem fio"],
+  "valorTotal": 3499.90
+}
+```
+
+> Não é necessário enviar `id`, `dataPedido` ou `status` — esses campos são preenchidos automaticamente pela API (`dataPedido` recebe a data/hora atual, e `status` nasce como `"Pendente"`).
+
+Resposta (`201 Created`):
+```json
+{
+  "id": 1,
+  "clienteNome": "Maria Silva",
+  "produtos": ["Notebook", "Mouse sem fio"],
+  "dataPedido": "2026-08-30T14:32:00Z",
+  "status": "Pendente",
+  "valorTotal": 3499.90
+}
+```
+
+**Atualizar pedido — `PUT /api/Pedido/AtualizarPedido/1`**
+
+Requisição:
+```json
+{
+  "clienteNome": "Maria Silva",
+  "produtos": ["Notebook", "Mouse sem fio", "Mochila"],
+  "dataPedido": "2026-08-30T10:00:00Z",
+  "status": "Pago",
+  "valorTotal": 3699.90
+}
+```
+
+> O campo `status` aceita o nome do enum como texto (`"Pendente"`, `"Pago"`, `"Enviado"`, `"Entregue"` ou `"Cancelado"`), não o número.
+
+Resposta (`200 OK`): o pedido atualizado, no mesmo formato acima.
+
+**Buscar pedido por ID — `GET /api/Pedido/BuscarPedido/1`**
+
+Resposta (`200 OK`): o pedido encontrado, ou `404 Not Found` com:
+```json
+{
+  "mensagem": "Pedido com Id 1 não encontrado."
+}
+```
+
+**Remover pedido — `DELETE /api/Pedido/RemoverPedido/1`**
+
+Resposta: `204 No Content` em caso de sucesso, ou `404 Not Found` (mesmo formato de erro acima) se o Id não existir.
 
 ## ▶️ Como executar o projeto
 
@@ -128,4 +185,4 @@ O desenho da arquitetura (diagrama de componentes/C4) está disponível em [`doc
 
 ## ✍️ Autor
 
-Yago dos Santos Ribeiro - Trabalho desenvolvido como Desafio Final do Bootcamp Arquiteto(a) de Software.
+Yago dos Santos Ribeiro
